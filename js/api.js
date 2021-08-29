@@ -2,11 +2,14 @@ const searchValue = document.getElementById("meal-search");
 const mealsDiv = document.getElementById("meals-div");
 const mainCard = document.getElementById("main-card");
 const Cards = document.getElementsByClassName("card");
-
-function search(term) {
-  fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${term}`)
+const loader =   document.getElementById('preloader');
+async function search(term) {
+  loader.classList.remove('d-none');
+ await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${term}`)
     .then((response) => response.json())
-    .then((data) => mealDisplay(data));
+    .then((data) => {mealDisplay(data);
+    });
+    loader.classList.add('d-none');
 }
 
 function searchNow() {
@@ -18,6 +21,7 @@ function mealDisplay(data) {
   console.log(data.meals);
   mainCard.innerHTML="";
   if (data.meals == null) {
+    loader.classList.add('d-none');
     console.log("No Data Found");
 
     mealsDiv.innerHTML = "<h3 class='text-center'> NO Data Found... <h3>";
@@ -42,6 +46,7 @@ function mealDisplay(data) {
     });
   }
   cardSelection();
+  loader.classList.add('d-none');
 }
 
 function cardSelection() {
@@ -51,4 +56,5 @@ function cardSelection() {
       mainCard.innerHTML = Cards[i].innerHTML;
     });
   }
+  
 }
